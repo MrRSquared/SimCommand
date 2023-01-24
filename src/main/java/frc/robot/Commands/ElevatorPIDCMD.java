@@ -36,6 +36,7 @@ public class ElevatorPIDCMD extends CommandBase {
   @Override
   public void execute() {
     double pidOutput = m_Controller.calculate(elevatorSubsystem.getEncoderDistance(), Units.inchesToMeters(setpoint));
+    m_Controller.setTolerance(Units.inchesToMeters(2));
     elevatorSubsystem.setMotorVoltage(pidOutput);
   }
 
@@ -43,11 +44,18 @@ public class ElevatorPIDCMD extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     elevatorSubsystem.setMotorVoltage(0.0);
+    System.out.println("Elevator Set has ended");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    System.out.println("ElevatorCMD is finishing");
+    if (m_Controller.getPositionError()< Units.inchesToMeters(10) ){
+      return true;
+    } else{
+      return false;
+    }
+    
   }
 }

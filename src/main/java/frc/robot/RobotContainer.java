@@ -76,7 +76,9 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_robotDrive.setMaxOutput(0.5)))
         .onFalse(new InstantCommand(() -> m_robotDrive.setMaxOutput(1)));
     new JoystickButton(m_driverController, 2)
-        .onTrue(new ElevatorPIDCMD(m_ElevatorSubsystem, 300));
+        .onTrue(new ElevatorPIDCMD(m_ElevatorSubsystem, 35));
+    new JoystickButton(m_driverController, 1)
+        .onTrue(new ElevatorPIDCMD(m_ElevatorSubsystem, 0));
   }
 
   public DriveSubsystem getRobotDrive() {
@@ -149,10 +151,7 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0))
-    .andThen(new ParallelCommandGroup(
-        new ElevatorPIDCMD(m_ElevatorSubsystem, 35),
-        new RunCommand(() -> m_robotDrive.tankDriveVolts(0, 0))
-        )
+    .andThen(new ElevatorPIDCMD(m_ElevatorSubsystem, 35)
     )
     
 ;
